@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2d719d6-9528-4a87-874d-45846c698c63" name="Changes" comment="" />
+    <list default="true" id="f2d719d6-9528-4a87-874d-45846c698c63" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jsonver/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jsonver/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jsonver/JsonVerification.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/jsonver/JsonVerification.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jsonver/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/jsonver/Main.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -80,7 +88,9 @@
       <updated>1712915873085</updated>
       <workItem from="1712915874337" duration="3647000" />
       <workItem from="1713084591280" duration="25000" />
-      <workItem from="1713087821007" duration="1773000" />
+      <workItem from="1713087821007" duration="2183000" />
+      <workItem from="1713251968125" duration="1236000" />
+      <workItem from="1713253656653" duration="1432000" />
     </task>
     <servers />
   </component>

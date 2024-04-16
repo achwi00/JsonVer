@@ -4,10 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class Main
@@ -15,8 +20,6 @@ public class Main
     public static void main(String[] args)
     {
         JsonVerification jsonVerification = new JsonVerification();
-        //File file = new File("data2.txt");
-        //jsonVerification.check(file);
         try{
             jsonVerification.test("data2.txt");
         } catch(IOException e){
@@ -31,7 +34,7 @@ class JsonVerification
 
     public boolean test(String pathName) throws IOException
     {
-        FileReader fileReader = new FileReader(new File(pathName));
+        FileReader fileReader = new FileReader(pathName);
         BufferedReader reader = new BufferedReader(fileReader);
         String line;
         StringBuilder s = new StringBuilder();
@@ -48,6 +51,17 @@ class JsonVerification
         ObjectMapper objectMapper = new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
         try {
             JsonNode jsonNode = objectMapper.readTree(json);
+
+//            jsonNode.fields().forEachRemaining(entry -> {
+//                String fieldName = entry.getKey();
+//                System.out.println("Field name: " + fieldName);
+//                JsonNode fieldValue = entry.getValue();
+//                if(fieldValue != null && fieldValue.isArray()){
+//
+//                }
+//                System.out.println("Field Value: " + fieldValue);
+//            });
+            processJsonNode(jsonNode);
             if (jsonNode != null) {
                 System.out.println("is a valid JSON file");
                 return true;
@@ -55,13 +69,35 @@ class JsonVerification
                 System.out.println("is not a valid JSON file");
                 return false;
             }
-        } catch (MismatchedInputException e) {
-            System.out.println("is not a valid JSON file");
-            return false;
-        } catch (JsonProcessingException e){
 
+        }catch (JsonProcessingException e){
             System.out.println("is not a valid JSON file");
             return false;
+        }
+    }
+
+    private static void processJsonNode(JsonNode jsonNode) {
+        Iterator<Map.Entry<String, JsonNode>> fieldsIterator = jsonNode.fields();
+        while (fieldsIterator.hasNext()) {
+            Map.Entry<String, JsonNode> field = fieldsIterator.next();
+            String fieldName = field.getKey();
+            JsonNode fieldValue = field.getValue();
+            System.out.println("Field Name: " + fieldName + ", Field Value: ");
+            System.out.println("Field Value Type: " + fieldValue.getNodeType());
+
+            if (fieldValue.isObject()) {
+//                fieldValue.fields().forEachRemaining(entry -> processJsonNode((JsonNode) entry));
+                processJsonNode(fieldValue);
+            }else if(fieldValue.isArray()){
+                for (JsonNode element : fieldValue) {
+                    System.out.println(element);
+                    System.out.println("n");
+                }
+            }
+            else {
+                // Print field name and value
+                System.out.println(fieldValue);
+            }
         }
     }
 }
