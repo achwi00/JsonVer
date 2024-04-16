@@ -78,7 +78,10 @@ class JsonVerification
 
     private static void processJsonNode(JsonNode jsonNode) {
         Iterator<Map.Entry<String, JsonNode>> fieldsIterator = jsonNode.fields();
+        boolean foundPolicy = false;
+        boolean foundStatement = false;
         while (fieldsIterator.hasNext()) {
+
             Map.Entry<String, JsonNode> field = fieldsIterator.next();
             String fieldName = field.getKey();
             JsonNode fieldValue = field.getValue();
@@ -86,12 +89,18 @@ class JsonVerification
             System.out.println("Field Value Type: " + fieldValue.getNodeType());
 
             if (fieldValue.isObject()) {
-//                fieldValue.fields().forEachRemaining(entry -> processJsonNode((JsonNode) entry));
+                if(Objects.equals(fieldName, "PolicyDocument")){
+                    System.out.println("found policy document");
+                    foundPolicy = true;
+                }
                 processJsonNode(fieldValue);
             }else if(fieldValue.isArray()){
+                if(Objects.equals(fieldName, "Statement") && foundPolicy){
+                    foundStatement = true;
+                    System.out.println("found statement");
+                }
                 for (JsonNode element : fieldValue) {
-                    System.out.println(element);
-                    System.out.println("n");
+                    processJsonNode(element);
                 }
             }
             else {
@@ -99,5 +108,6 @@ class JsonVerification
                 System.out.println(fieldValue);
             }
         }
+
     }
 }
