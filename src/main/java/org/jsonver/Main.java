@@ -27,18 +27,9 @@ public class Main
 class JsonVerification
 {
     private String resource = null;
-    //those should be class attributes:
     private boolean foundResource = false;
     private boolean foundPolicy = false;
     private boolean foundStatement = false;
-
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
 
     public boolean test(String pathName) throws IOException {
 
@@ -60,22 +51,25 @@ class JsonVerification
 
             // Convert directly to JsonNode without converting to String
             JsonNode jsonNode = objectMapper.readTree(stringBuilder.toString());
-            processJsonNode(jsonNode);
-            
-            if(getResource() == null){
-                System.out.println("No resource field available");
-                return false;
-            }
-            else{
-                //check if it contains a single asterisk
-                System.out.println("Resource value: ");
-                System.out.println(getResource());
-            }
 
             if (jsonNode != null) {
+                processJsonNode(jsonNode);
+                String res = getResource();
+                if(getResource() == null){
+                    System.out.println("No resource field available");
+                    return false;
+                }
+                else{
+                    //check if it contains a single asterisk
+                    for (int i = 0; i < res.length() ; i++) {
+                        if (res.charAt(i) == '*') {
+                            System.out.println("Contains a single asterisk!");
+                            return false;
+                        }
+                    }
+                    return true;
+                }
 
-                System.out.println("is a valid JSON file");
-                return true;
             } else {
                 System.out.println("is not a valid JSON file");
                 return false;
@@ -101,11 +95,11 @@ class JsonVerification
 
             //check if the key is a Resource, assign it to this.Resource
             if(Objects.equals(String.valueOf(fieldName), "Resource")) {
-                if(foundResource){
+                if(isFoundResource()){
                     return false;
                 } else{
-                    this.foundResource = true;
-                    if(foundStatement){
+                    setFoundResource(true);
+                    if(isFoundStatement()){
                         if(getResource() == null){
                             setResource(String.valueOf(fieldValue));
                         } else{
@@ -124,13 +118,13 @@ class JsonVerification
                 if (fieldValue.isObject()) {
                     if(Objects.equals(fieldName, "PolicyDocument")){
                         System.out.println("found policy document");
-                        this.foundPolicy = true;
+                        setFoundPolicy(true);
                     }
                     processJsonNode(fieldValue);
-                }else if(fieldValue.isArray()){
-                    if(Objects.equals(fieldName, "Statement") && foundPolicy){
-                        this.foundStatement = true;
-                        System.out.println("found statement");
+                }
+                else if(fieldValue.isArray()){
+                    if(Objects.equals(fieldName, "Statement") && isFoundPolicy()){
+                        setFoundStatement(true);
                     }
 
                     for (JsonNode element : fieldValue) {
@@ -142,13 +136,19 @@ class JsonVerification
 
                     }
 
-                }else{
-                    System.out.println(fieldValue);
-                }
+                }else System.out.println(fieldValue);
             }
 
         }
-        if(getResource() != null) return true;
-        else return false;
+        return getResource() != null;
     }
+
+    public String getResource() {return resource;}
+    public void setResource(String resource) {this.resource = resource;}
+    public boolean isFoundResource() {return foundResource;}
+    public void setFoundResource(boolean foundResource) {this.foundResource = foundResource;}
+    public boolean isFoundPolicy() {return foundPolicy;}
+    public void setFoundPolicy(boolean foundPolicy) {this.foundPolicy = foundPolicy;}
+    public boolean isFoundStatement() {return foundStatement;}
+    public void setFoundStatement(boolean foundStatement) {this.foundStatement = foundStatement;}
 }
