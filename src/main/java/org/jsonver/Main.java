@@ -1,7 +1,8 @@
 package org.jsonver;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,43 +27,34 @@ public class Main
 }
 class JsonVerification
 {
-    private String resource = null;
-    private boolean foundResource = false;
+    private String validatedResource = null;
     private boolean foundPolicy = false;
     private boolean foundStatement = false;
 
     public boolean test(String pathName) throws IOException {
 
-        try (FileReader fileReader = new FileReader(pathName);
-             BufferedReader reader = new BufferedReader(fileReader)) {
+        try (FileReader fileReader = new FileReader(pathName)) {
 
-            ObjectMapper objectMapper = new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonFactory jsonFactory = new JsonFactory();
 
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
+            JsonParser jsonParser = jsonFactory.createParser(fileReader);
 
-            if (stringBuilder.length() == 0) {
-                System.out.println("The file is empty");
-                return false;
-            }
-
-            // Convert directly to JsonNode without converting to String
-            JsonNode jsonNode = objectMapper.readTree(stringBuilder.toString());
+            //Parse the content to JsonNode
+            JsonNode jsonNode = objectMapper.readTree(jsonParser);
+            jsonParser.close();
 
             if (jsonNode != null) {
                 processJsonNode(jsonNode);
-                String res = getResource();
-                if(getResource() == null){
+                //String res = getResource();
+                if(getValidatedResource() == null){
                     System.out.println("No resource field available");
                     return false;
                 }
                 else{
                     //check if it contains a single asterisk
-                    for (int i = 0; i < res.length() ; i++) {
-                        if (res.charAt(i) == '*') {
+                    for (int i = 0; i < getValidatedResource().length() ; i++) {
+                        if (getValidatedResource().charAt(i) == '*') {
                             System.out.println("Contains a single asterisk!");
                             return false;
                         }
@@ -88,20 +80,18 @@ class JsonVerification
         while (fieldsIterator.hasNext()) {
 
             Map.Entry<String, JsonNode> field = fieldsIterator.next();
+
             String fieldName = field.getKey();
             JsonNode fieldValue = field.getValue();
             System.out.println("Field Name: " + fieldName + ", Field Value: ");
-            System.out.println("Field Value Type: " + fieldValue.getNodeType());
 
             //check if the key is a Resource, assign it to this.Resource
-            if(Objects.equals(String.valueOf(fieldName), "Resource")) {
-                if(isFoundResource()){
-                    return false;
-                } else{
-                    setFoundResource(true);
+            if(Objects.equals(fieldName, "Resource")) {
+
                     if(isFoundStatement()){
-                        if(getResource() == null){
-                            setResource(String.valueOf(fieldValue));
+                        if(getValidatedResource() == null){
+                            System.out.println(fieldValue);
+                            setValidatedResource(String.valueOf(fieldValue));
                         } else{
                             System.out.println("Multiple resource values found");
                             return false;
@@ -110,7 +100,6 @@ class JsonVerification
                         System.out.println("Resource found in an invalid place");
                         return false;
                     }
-                }
 
             }
             //if it is not Resource
@@ -136,17 +125,15 @@ class JsonVerification
 
                     }
 
-                }else System.out.println(fieldValue);
+                }else System.out.print(fieldValue + "\n");
             }
 
         }
-        return getResource() != null;
+        return getValidatedResource() != null;
     }
 
-    public String getResource() {return resource;}
-    public void setResource(String resource) {this.resource = resource;}
-    public boolean isFoundResource() {return foundResource;}
-    public void setFoundResource(boolean foundResource) {this.foundResource = foundResource;}
+    public String getValidatedResource() {return validatedResource;}
+    public void setValidatedResource(String validatedResource) {this.validatedResource = validatedResource;}
     public boolean isFoundPolicy() {return foundPolicy;}
     public void setFoundPolicy(boolean foundPolicy) {this.foundPolicy = foundPolicy;}
     public boolean isFoundStatement() {return foundStatement;}
