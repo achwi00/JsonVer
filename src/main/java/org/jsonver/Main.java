@@ -55,7 +55,7 @@ class JsonVerification
 
             if (stringBuilder.length() == 0) {
                 System.out.println("The file is empty");
-
+                return false;
             }
 
             // Convert directly to JsonNode without converting to String
@@ -99,55 +99,54 @@ class JsonVerification
             System.out.println("Field Name: " + fieldName + ", Field Value: ");
             System.out.println("Field Value Type: " + fieldValue.getNodeType());
 
-            if (fieldValue.isObject()) {
-                if(Objects.equals(fieldName, "PolicyDocument")){
-                    System.out.println("found policy document");
-                    this.foundPolicy = true;
-                }
-                processJsonNode(fieldValue);
-            }else if(fieldValue.isArray()){
-                if(Objects.equals(fieldName, "Statement") && foundPolicy){
-                    this.foundStatement = true;
-                    System.out.println("found statement");
-                }
-
-                for (JsonNode element : fieldValue) {
-                    if (element.isTextual()) {
-                        System.out.println(element);
-                    }else{
-                        processJsonNode(element);
-                    }
-
-                }
-
-            }
-            else {
-                // Print field name and value
-                if(Objects.equals(String.valueOf(fieldName), "Resource"))
-                {
-                    if(foundResource){
-                        return false;
-                    }
-                    else{
-                        this.foundResource = true;
-                        if(foundStatement){
-                            if(getResource() == null){
-                                setResource(String.valueOf(fieldValue));
-                            } else{
-                                System.out.println("Multiple resource values found");
-                                return false;
-                            }
-                        }
-                        else{
-                            System.out.println("Resource found in an invalid place");
+            //check if the key is a Resource, assign it to this.Resource
+            if(Objects.equals(String.valueOf(fieldName), "Resource")) {
+                if(foundResource){
+                    return false;
+                } else{
+                    this.foundResource = true;
+                    if(foundStatement){
+                        if(getResource() == null){
+                            setResource(String.valueOf(fieldValue));
+                        } else{
+                            System.out.println("Multiple resource values found");
                             return false;
                         }
+                    } else{
+                        System.out.println("Resource found in an invalid place");
+                        return false;
+                    }
+                }
+
+            }
+            //if it is not Resource
+            else {
+                if (fieldValue.isObject()) {
+                    if(Objects.equals(fieldName, "PolicyDocument")){
+                        System.out.println("found policy document");
+                        this.foundPolicy = true;
+                    }
+                    processJsonNode(fieldValue);
+                }else if(fieldValue.isArray()){
+                    if(Objects.equals(fieldName, "Statement") && foundPolicy){
+                        this.foundStatement = true;
+                        System.out.println("found statement");
                     }
 
+                    for (JsonNode element : fieldValue) {
+                        if (element.isTextual()) {
+                            System.out.println(element);
+                        }else{
+                            processJsonNode(element);
+                        }
 
+                    }
+
+                }else{
+                    System.out.println(fieldValue);
                 }
-                System.out.println(fieldValue);
             }
+
         }
         if(getResource() != null) return true;
         else return false;
