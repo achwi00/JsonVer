@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2d719d6-9528-4a87-874d-45846c698c63" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data2.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data2.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/jsonver/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/jsonver/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jsonver/JsonVerification.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/jsonver/JsonVerification.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/jsonver/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/jsonver/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/JsonVerificationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/JsonVerificationTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,12 +62,17 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "build.tools",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\achwi\Desktop\RemitlyTask\withMaven\JsonVer\src\main\resources" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Unnamed" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
@@ -115,7 +126,10 @@
       <workItem from="1713364257502" duration="3788000" />
       <workItem from="1713437767407" duration="4352000" />
       <workItem from="1713445998971" duration="1391000" />
-      <workItem from="1713448166489" duration="3263000" />
+      <workItem from="1713448166489" duration="3901000" />
+      <workItem from="1713459384738" duration="995000" />
+      <workItem from="1713461125326" duration="1136000" />
+      <workItem from="1713462426469" duration="3691000" />
     </task>
     <servers />
   </component>

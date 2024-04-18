@@ -3,6 +3,7 @@
 ## Table of contents
 * [General info](#general-info)
 * [Content](#content)
+* [How to run](#how-to-run)
 * [Technologies](#technologies)
 
 ## General info
@@ -39,20 +40,45 @@ Main content can be found in:
 src > main > java > org > jsonver > JsonVerification, Main
 
 Tests can be found in:
-src > test > JsonverificationTest 
+src > test > JsonverificationTest
 
-### Running
-The application structure is simple, navigate to src > main > java > org > jsonver > Main, and run the Main class, which 
-contains the static method main. The method creates an instance of JsonVerification and runs the validateJsonResource().
-This method takes a pathName of type String as a parameter, originally it is "data2.txt", a text file within the project 
-structure. 
+## How to run
+The application structure is simple, and running it is straightforward.
+### Run from IDE
+After downloading (Code > Download ZIP) and unzipping the project from GitHub, open it in Your IDE and navigate to src > main > java > org > jsonver > Main, 
+and run the current file, the Main class, which contains the static method main. The method creates an instance of JsonVerification and runs the validateJsonResource().
+After running, You will be promped in the console, to provide a path to a json file, which contents You would like to verify.
+You may type in:
+
+src/main/resources/data2.txt
+
+to use a provided text file, that already has json content inside (file can be found in src>main>resources and its content 
+may be adjusted).
+
+### Run tests
 Testing the method relies on running it with a temporarily created test file and changing its content each time, checking if the 
 output of the method is correct with assertion.
+To run the tests, navigate to src > test > JsonverificationTest and run the current file, JsonverificationTest class.
+
+
+### Run fat jar from CMD (Main class)
+I have prepared a jar-with-dependencies file. To run the fat jar from CMD on Windows, after downloading the zip file and unzipping it, open CMD and 
+navigate to the downloaded directory. Then, navigate to target directory (cd target) and run the jar file like this:
+
+java -jar jsonresource-ver-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+This will prompt You to provide a path for a json file. You can provide the full path to the data2.txt within the project 
+structure, and it will look somewhat like this:
+
+C:\Users\user00\Downloads\JsonVer\src\main\resources\data2.txt
+
+You may adjust the contents of the file accordingly.
+
 
 ## Technologies
 Project built using:
 
-* Java version 19
+* Java version 21
 * Maven version 3.8.1
 * JUnit version 4.13.1 - for testing
 * Jackson Databind version 2.16.1 - for json-related work
