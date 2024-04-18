@@ -18,100 +18,97 @@ public class JsonVerification
     private boolean foundPolicy = false;
     private boolean foundStatement = false;
 
-    public boolean validateJsonResource(String pathName) throws IOException
-    {
-
+    public boolean validateJsonResource(String pathName) throws IOException {
         try (FileReader fileReader = new FileReader(pathName)) {
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonFactory jsonFactory = new JsonFactory();
             JsonParser jsonParser = jsonFactory.createParser(fileReader);
 
-            //Parse the content to JsonNode
+            //parse the content to JsonNode
             JsonNode jsonNode = objectMapper.readTree(jsonParser);
             jsonParser.close();
-
+            //if jsonNode is not empty, process it
             if (jsonNode != null) {
 
                 processJsonNode(jsonNode);
+                //if the resource field is empty, there was no valid resource field available
                 if(getValidatedResource() == null){
-                    System.out.println("No resource field available");
+                    System.out.println("No resource field available.");
                     return false;
                 }
                 else{
-                    //check if it contains a single asterisk
+                    //check if the resource contains a single asterisk
                     for (int i = 0; i < getValidatedResource().length() ; i++) {
                         if (getValidatedResource().charAt(i) == '*') {
-                            System.out.println("Contains a single asterisk!");
+                            System.out.println("Contains a single asterisk.");
                             return false;
                         }
                     }
+                    //if it does not contain a single asterisk, return true
+                    System.out.println("Valid resource: " + getValidatedResource());
                     return true;
                 }
 
             } else {
-                System.out.println("is not a valid JSON file");
+                System.out.println("Is not a valid JSON file");
                 return false;
             }
 
         }catch (JsonProcessingException e){
-            System.out.println("is not a valid JSON file");
+            System.out.println("Is not a valid JSON file");
             return false;
         }
     }
 
     private boolean processJsonNode(JsonNode jsonNode) {
-        System.out.println("\nNEW ITERRATION");
+        //iterate through the node
         Iterator<Map.Entry<String, JsonNode>> fieldsIterator = jsonNode.fields();
 
         while (fieldsIterator.hasNext()) {
 
             Map.Entry<String, JsonNode> field = fieldsIterator.next();
-
             String fieldName = field.getKey();
             JsonNode fieldValue = field.getValue();
-            System.out.println("Field Name: " + fieldName + ", Field Value: ");
 
-            //check if the key is a Resource, assign it to this.Resource
+            //check if the key is a Resource
             if(Objects.equals(fieldName, "Resource")) {
-
+                //assign it to this.Resource
                 if(isFoundStatement()){
                     if(getValidatedResource() == null){
-                        System.out.println(fieldValue);
                         setValidatedResource(String.valueOf(fieldValue));
                     } else{
-                        System.out.println("Multiple resource values found");
+                        System.out.println("Multiple resource values found.");
                         return false;
                     }
                 } else{
-                    System.out.println("Resource found in an invalid place");
+                    //if the statement was not found yet, the resource is not in the right place
+                    System.out.println("Resource found in an invalid place.");
                     return false;
                 }
 
             }
-            //if it is not Resource
+            //if the key is not Resource
             else {
+                //check the key value is an object
                 if (fieldValue.isObject()) {
                     if(Objects.equals(fieldName, "PolicyDocument")){
-                        System.out.println("found policy document");
+                        //if the policy document is found, change the according flag
                         setFoundPolicy(true);
                     }
                     processJsonNode(fieldValue);
-                }
+                }//check if the field value is an array
                 else if(fieldValue.isArray()){
                     if(Objects.equals(fieldName, "Statement") && isFoundPolicy()){
+                        //if the statement field is found, and policy was found before, change the according flag
                         setFoundStatement(true);
                     }
-
+                    //recursively process each element
                     for (JsonNode element : fieldValue) {
-                        if (element.isTextual()) {
-                            System.out.println(element);
-                        }else{
-                            processJsonNode(element);
-                        }
+                        processJsonNode(element);
                     }
 
-                }else System.out.print(fieldValue + "\n");
+                }
             }
 
         }

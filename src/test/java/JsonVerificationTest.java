@@ -1,6 +1,4 @@
 import org.jsonver.JsonVerification;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,20 +13,12 @@ import static org.junit.Assert.assertTrue;
 public class JsonVerificationTest
 {
     private static final String fileName = "test_file.txt";
-    private static String currentContent;
 
     @BeforeClass
     public static void createTempFile() throws IOException {
         File tempFile = File.createTempFile(fileName, ".txt");
         tempFile.deleteOnExit();
     }
-
-//    @Before
-//    public void updateTestContent(String content) throws IOException
-//    {
-//        currentContent = content;
-//
-//    }
 
     @Test
     public void testValidResource_ReturnTrue() throws IOException
@@ -39,10 +29,13 @@ public class JsonVerificationTest
         assertTrue(jsonVerification.validateJsonResource(fileName));
     }
     @Test
-    public void testValidArrayResource_ReturnTrue(){
-
+    public void testValidArrayResource_ReturnTrue() throws IOException
+    {
+        String content = "{\"PolicyName\":\"root\",\"PolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"IamListAccess\",\"Effect\":\"Allow\",\"Action\":[\"iam:ListRoles\",\"iam:ListUsers\"],\"Resource\":[\"field1\",\"field2\"]}]}}";
+        Files.writeString(Paths.get(fileName), content);
+        JsonVerification jsonVerification = new JsonVerification();
+        assertTrue(jsonVerification.validateJsonResource(fileName));
     }
-
 
     @Test
     public void testExistingResourceWithAsterisk_ReturnFalse() throws IOException
@@ -53,16 +46,28 @@ public class JsonVerificationTest
         assertFalse(jsonVerification.validateJsonResource(fileName));
     }
     @Test
-    public void testEmptyFile_ReturnFalse(){
-
+    public void testEmptyFile_ReturnFalse() throws IOException
+    {
+        String content = "";
+        Files.writeString(Paths.get(fileName), content);
+        JsonVerification jsonVerification = new JsonVerification();
+        assertFalse(jsonVerification.validateJsonResource(fileName));
     }
     @Test
-    public void testMissingResource_ReturnFalse(){
-
+    public void testMissingResource_ReturnFalse() throws IOException
+    {
+        String content = "{\"PolicyName\":\"root\",\"PolicyDocument\":{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"IamListAccess\",\"Effect\":\"Allow\",\"Action\":[\"iam:ListRoles\",\"iam:ListUsers\"]}]}}";
+        Files.writeString(Paths.get(fileName), content);
+        JsonVerification jsonVerification = new JsonVerification();
+        assertFalse(jsonVerification.validateJsonResource(fileName));
     }
     @Test
-    public void testResourceWrongLocation_ReturnFalse(){
-
+    public void testResourceWrongLocation_ReturnFalse() throws IOException
+    {
+        String content = "{\"PolicyName\":\"root\",\"PolicyDocument\":{\"Version\":\"2012-10-17\",\"Resource\":\"resValue\",\"Statement\":[{\"Sid\":\"IamListAccess\",\"Effect\":\"Allow\",\"Action\":[\"iam:ListRoles\",\"iam:ListUsers\"]}]}}";
+        Files.writeString(Paths.get(fileName), content);
+        JsonVerification jsonVerification = new JsonVerification();
+        assertFalse(jsonVerification.validateJsonResource(fileName));
     }
 
 }
