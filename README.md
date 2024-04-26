@@ -7,9 +7,8 @@
 * [Technologies](#technologies)
 
 ## General info
-Programme written as a recruitment assignment for an internship at Remitly. The given task was to write a method validating a
-Resource field in a json file, checking its value, returning false if it contains a single asterisk, and true in other cases.
-The instructions provided left some room for interpretation, so I have decided to make the following assumptions:
+The given task is to write a method validating a Resource field in a json file, checking its value, returning false if it contains a single asterisk, and true in other cases.
+Assumptions made:
 
 * the json file must be of correct format,
 * there needs to be a Resource field in the file,
